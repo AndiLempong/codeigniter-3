@@ -23,12 +23,13 @@
 
         <h1 style="text-align: center;">Pendaftaran Online</h1>
         <hr>
-        <center><img src="https://o.remove.bg/downloads/72f0720b-45d1-4e78-a228-2f1c03987482/logobinusa-removebg-preview.png" alt="" width="350px" height="300px">
-        <h2 style="text-align: center;">SMK Bina Nusantara Semarang</h2>
+        <center><img src="https://binusasmg.sch.id/ppdb/logobinusa.png" alt="" width="300px" height="250px">
+        
+            <h2 style="text-align: center;">SMK Bina Nusantara Semarang</h2>
         
         <a class="btn btn-primary" href="auth">Login</a>
     </center>
 </div>
-    
+
 </body>
 </html
