@@ -40,10 +40,11 @@
                     <?php endforeach; ?>
                 </select>
                 <div class="d-grid gap-2 d-md-block">
-                <button class="btn btn-primary" type="submit">Submit</button>
+                <button class="btn btn-primary" type="submit">Ubah</button>
                 </div>
                 </div>
         </form>
+
     </div>
 </body>
 

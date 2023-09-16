@@ -80,10 +80,9 @@
                <?php echo tampil_full_kelas_byid($row->id_kelas) ?>
          </td>
                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-            <button type="button" class="btn btn-warning">Ubah</button>
+                  <a href="<?php echo base_url('admin/ubah_siswa/').$row->id_siswa?>" class="btn btn-danger">Ubah</a>
             <button onclick="hapus(<?php echo $row->id_siswa?>)" class="btn btn-danger">Hapus</button>
-       
-
+         
          </td>
       </tr><?php endforeach ?>
    </table>
