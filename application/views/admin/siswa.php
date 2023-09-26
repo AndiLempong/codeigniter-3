@@ -2,12 +2,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
 
 <body class="min-vh-100 d-flex align-items-center">
@@ -49,30 +48,35 @@
                   <path d="M6.737 11.061a2.961 2.961 0 0 1 .81-1.515l6.117-6.116A4.839 4.839 0 0 1 16 2.141V2a1.97 1.97 0 0 0-1.933-2H7v5a2 2 0 0 1-2 2H0v11a1.969 1.969 0 0 0 1.933 2h12.134A1.97 1.97 0 0 0 16 18v-3.093l-1.546 1.546c-.413.413-.94.695-1.513.81l-3.4.679a2.947 2.947 0 0 1-1.85-.227 2.96 2.96 0 0 1-1.635-3.257l.681-3.397Z"/>
                   <path d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z"/>
                </svg>
-               <span class="flex-1 ml-3 whitespace-nowrap">Sign Up</span>
+               <span class="flex-1 ml-3 whitespace-nowrap">Account</span>
             </a>
          </li>
       </ul>
    </div>
 </aside>
-    <div class="card w-70 m-auto p-3">
-        <table class="table table-striped">
-  <thead>
+   <div class="card w-70 m-auto p-3">
+      <table class="table table-striped">
+   <thead>
       <th scope="col">Siswa</th>
       <th scope="col">Nama Siswa</th>
+      <th scope="col">Foto Siswa</th>
       <th scope="col">NISN</th>
       <th scope="col">Gender</th>
       <th scope="col">Kelas</th>
       <th class="text-center">Aksi</th>
-    </tr>
-  </thead>
+   </tr>
+   </thead>
 
-  <tbody class="table-group-divider">
-  <?php $no=0; foreach($siswa as $row): $no++ ?>
-  <tr>
+   <tbody class="table-group-divider">
+   <?php $no=0; foreach($siswa as $row): $no++ ?>
+   <tr>
       <td class="whitespace-nowrap px-4 py-2 text-gray-700"><?php echo$no ?></td>
          <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-            <?php echo $row->nama_siswa ?></td>
+            <?php echo $row->nama_siswa ?>
+         </td>
+         <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+         <img src="<?php echo base_url('images/siswa/'.$row->foto) ?>" width="50">
+         </td>
             <td class="whitespace-nowrap px-4 py-2 text-gray-700"><?php echo $row->nisn ?></td>
          <td class="whitespace-nowrap px-4 py-2 text-gray-700"><?php echo $row->gender ?>
          </td>
@@ -80,21 +84,21 @@
                <?php echo tampil_full_kelas_byid($row->id_kelas) ?>
          </td>
                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                  <a href="<?php echo base_url('admin/ubah_siswa/').$row->id_siswa?>" class="btn btn-danger">Ubah</a>
-            <button onclick="hapus(<?php echo $row->id_siswa?>)" class="btn btn-danger">Hapus</button>
+                  <a href="<?php echo base_url('admin/ubah_siswa/').$row->id_siswa?>" class="btn btn-outline-success">Ubah</a>
+            <button onclick="hapus(<?php echo $row->id_siswa?>)" class="btn btn-outline-warning">Hapus</button>
          
          </td>
       </tr><?php endforeach ?>
    </table>
-  <a href="<?php echo base_url('admin/tambah_siswa') ?>" class="btn btn-primary">Tambah</a>
+   <a href="<?php echo base_url('admin/tambah_siswa') ?>" class="btn btn-outline-danger">Tambah</a>
 </div>
-    <script>
-        function hapus(id) {
+   <script>
+         function hapus(id) {
             var yes = confirm('Benarkah Demikian?');
             if (yes == true) {
-                window.location.href = "<?php echo base_url('admin/hapus_siswa/')?>" + id;
+               window.location.href = "<?php echo base_url('admin/hapus_siswa/')?>" + id;
             }
-        }
-    </script>
+         }
+   </script>
 </tbody>
 </html>

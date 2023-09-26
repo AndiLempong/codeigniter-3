@@ -39,12 +39,14 @@
                     </option>
                     <?php endforeach; ?>
                 </select>
+                <br>
+                <input type="file" name="foto" />
                 <div class="d-grid gap-2 d-md-block">
-                <button class="btn btn-primary" type="submit">Ubah</button>
+                    <br>
+                    <button class="btn btn-primary" type="submit">Tambah</button>
                 </div>
                 </div>
         </form>
-
     </div>
 </body>
 
