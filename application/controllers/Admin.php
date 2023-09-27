@@ -19,6 +19,12 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/index');
 	}
 
+	public function keuangan()
+	{
+		$data['keuangan'] = $this->m_model->get_data('keuangan')->result();
+		$this->load->view('admin/keuangan');
+	}
+
 	public function upload_img($value)
 	{
 		$kode = round(microtime(true) * 1000);
@@ -61,7 +67,7 @@ class Admin extends CI_Controller {
 		if($eksekusi)
 		{
 			$this->session->set_flashdata('sukses', 'berhasil');
-			redirect(base_url('admin/daftarsiswa'));
+			redirect(base_url('admin/siswa'));
 		} 
 		else
 		{
