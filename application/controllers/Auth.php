@@ -11,7 +11,8 @@ class Auth extends CI_Controller {
 	public function index()
 	{
 		$this->load->view('auth/halamanlogin');
-	} 
+	}
+
 	public function aksi_login()
 	{
 	$email = $this->input->post ('email', true);
@@ -31,6 +32,8 @@ class Auth extends CI_Controller {
 		$this->session->set_userdata($data);
 		if ($this->session->userdata('role') == 'admin') {
 			redirect(base_url()."admin");
+		}elseif ($this->session->userdata('role') == 'keuangan') {
+			redirect(base_url()."keuangan");
 		} else {
 			redirect(base_url()."auth");
 		}

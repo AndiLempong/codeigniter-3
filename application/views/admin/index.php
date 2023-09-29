@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
 
-    <style>
-        p {
-  width: 300px;
-  height: 100px;
-  padding: 20px;
-  background-color: aqua;
-  box-shadow: 10px 15px;
+   <style>
+      p {
+   width: 300px;
+   height: 100px;
+   padding: 20px;
+   background-color: aqua;
+   box-shadow: 10px 15px;
 }
-    </style>
+   </style>
 </head>
 </head>
 <body>

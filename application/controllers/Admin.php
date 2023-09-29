@@ -9,7 +9,7 @@ class Admin extends CI_Controller {
 		$this->load->model('m_model');
 		$this->load->helper('my_helper');;
 		$this->load->library('upload');
-        if ($this->session->userdata('logged_in')!=true) {
+        if ($this->session->userdata('logged_in')!= true && $this->session->userdata('role') != 'index') {
             redirect(base_url().'auth');
         }
 	}
@@ -17,12 +17,6 @@ class Admin extends CI_Controller {
 	public function index()
 	{
 		$this->load->view('admin/index');
-	}
-
-	public function keuangan()
-	{
-		$data['keuangan'] = $this->m_model->get_data('keuangan')->result();
-		$this->load->view('admin/keuangan');
 	}
 
 	public function upload_img($value)
@@ -48,10 +42,43 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/siswa', $data);
 	}
 
+	// public function hapus_siswa($id)
+	// {
+	// 	$this->m_model->delete('siswa', 'id_siswa', $id);
+	// 	redirect(base_url('admin/siswa'));
+	// }
+
 	public function hapus_siswa($id)
 	{
-		$this->m_model->delete('siswa', 'id_siswa', $id);
-		redirect(base_url('admin/siswa'));
+		// model get siswa
+		$siswa = $this->m_model->get_by_id('siswa', 'id_siswa', $id)->row();
+		if ($siswa) {
+			if ($siswa->foto !== 'User.png') {
+				$file_path = './images/siswa/' . $siswa->foto;
+
+				if (file_exists($file_path)) {
+					if (unlink($file_path)) {
+						// hapus file berhasil menggunakan model delete 
+						$this->m_model->delete('siswa', 'id_siswa', $id);
+						redirect(base_url('admin/siswa'));
+					} else {
+						// gagal hapus file
+						echo "Gagal menghapus file.";
+					}
+				} else {
+					// File tidak ditemukan
+					echo "File tidak di temukan.";
+				}
+			} else {
+				// Tanpa hapus file 'User.png'
+				$this->m_model->delete('siswa', 'id_siswa', $id);
+				redirect(base_url('admin/siswa'));
+			}
+
+		} else {
+			// Siswa tidak di temukan
+			echo "Siswa tidak di temukan.";
+		}
 	}
 
 	public function aksi_ubah_siswa()
@@ -153,7 +180,60 @@ class Admin extends CI_Controller {
 			redirect(base_url('admin/akun'));
 		}
 	}
-}
+// KEUANGAN
+	public function keuangan()
+    {
+        $data['keuangan'] = $this->m_model->get_data('keuangan')->result();
+		$this->load->view('admin/keuangan',$data);
+    }
 
+	public function aksi_tambah_keuangan()
+	{
+		$data = [
+			'pemasukan' => $this->input->post('pemasukan'),
+			'pengeluaran' => $this->input->post('pengeluaran'),
+			'tanggal' => $this->input->post('tanggal'),
+		];
+		$this->m_model->tambah_data('keuangan', $data);
+		redirect(base_url('admin/keuangan'));
+	}
+
+	public function tambah_keuangan()
+	{
+		$data['keuangan'] = $this->m_model->get_data('keuangan')->result();
+		$this->load->view('admin/tambah_keuangan',$data);
+	}
+
+	public function hapus_keuangan($id)
+	{
+		$this->m_model->delete('keuangan', 'id', $id);
+		redirect(base_url('admin/keuangan')); 
+	}
+
+	public function ubah_keuangan($id)
+	{
+		$data['keuangan'] = $this->m_model->get_by_id('keuangan', 'id', $id)->result();
+        $this->load->view('admin/ubah_keuangan', $data);
+	}
+
+	public function aksi_ubah_keuangan()
+	{
+		$data = [
+			'pemasukan' => $this->input->post('pemasukan'),
+			'pengeluaran' => $this->input->post('pengeluaran'),
+			'tanggal' => $this->input->post('tanggal'),
+
+		];
+		$eksekusi=$this->m_model->ubah_data
+		('keuangan', $data, array('id'=>$this->input->post('id')));
+		if($eksekusi){
+			$this->session->set_flashdata('sukses', 'berhasil');
+			redirect(base_url('admin/keuangan'));
+		} else {
+			$this->session->set_flashdata('error', 'gagal...');
+			redirect(base_url('admin/keuangan/ubah_keuangan'.$this->input->post('id')));
+		}
+	}
+}
 
 ?>	
