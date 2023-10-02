@@ -25,6 +25,20 @@
                 </select>
                 <br>
             </div>
+
+            <div class="mb-3 col-6">
+            <label for="kelas" class="form-label">Kelas</label>
+            <select name="id_kelas" class="form-select">
+            <option selected>Pilih Kelas</option>
+            <?php foreach ($kelas as $row) : ?>
+                <option value="<?php echo $row->id ?>">
+                <?php echo tampil_full_kelas_byid($row->id) ?>
+            </option>
+            <?php endforeach ?>
+            </select>
+            <br>
+            </div>
+
             <div class="mb-3 col-6">
                 <label for="jenis_pembayaran" class="form-label"><b>Jenis Pembayaran</b></label>
 

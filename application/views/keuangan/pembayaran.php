@@ -82,16 +82,20 @@
       </div>
         </div>
 
- <div class="row">
-        <div class="col-12 card p-6">
-                <div class="card w-50 m-auto p-3">
+ <!-- <div class="row"> -->
+        <div class="col-16 card p-8">
+                <div class="card m-auto p-8">
                     <table class="table table-striped">
                         <thead>
                             <a href="<?php echo base_url('keuangan/tambah_pembayaran') ?>">
-                            <button type="submit" class="btn btn-outline-dark" name="submit">Tambah</button></a>    
+                              <button type="submit" class="btn btn-outline-dark" name="submit">Tambah</button></a>
+                              <a href="<?php echo base_url('keuangan/export') ?>">
+                              Export
+                            </a>
                             <tr>
                                 <th scope="col">No</th>
                                 <th scope="col">Siswa</th>
+                                <th scope="col">Kelas</th>
                                 <th scope="col">Jenis Pembayaran</th>
                                 <th scope="col">Total Pembayaran</th>
                                 <th scope="col">Aksi</th>
@@ -102,8 +106,9 @@
                             <tr>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700"><?php echo $no ?></td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700"><?php echo tampil_full_siswa_byid($row->id_siswa )?></td>
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><?php echo tampil_full_kelas_byid($row->id_kelas) ?></td>
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700"><?php echo $row->jenis_pembayaran ?></td>
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><?php echo $row->total_pembayaran ?></td>  
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700"><?php echo $row->total_pembayaran ?></td> 
 
                             <td class="whitespace-nowrap px-4 py-2 text-gray-700">
                                 <a href="<?php echo base_url('keuangan/ubah_pembayaran/') . $row->id ?>" class="btn btn-secondary">Ubah</a>
