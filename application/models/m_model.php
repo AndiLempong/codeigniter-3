@@ -32,4 +32,20 @@ class M_model extends CI_Model{
         $data = $this->db->update($tabel, $data, $where);
         return $this->db->affected_rows();
     }
+
+// Import
+    public function get_by_nisn($nisn)
+    {
+        $this->db->select('id_siswa');
+        $this->db->select('siswa');
+        $this->db->select('nisn', $nisn);
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            $result = $query->row();
+            return $result->id_siswa;
+        } else {
+            return false;
+        }
+    }
 }
