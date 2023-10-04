@@ -38,6 +38,7 @@
             </select>
             <br>
             </div>
+            
 
             <div class="mb-3 col-6">
                 <label for="jenis_pembayaran" class="form-label"><b>Jenis Pembayaran</b></label>
@@ -48,14 +49,12 @@
                     <option value="Pembayaran Uang Gedung">Pembayaran Uang Gedung</option>
                     <option value="Pembayaran Seragam">Pembayaran Seragam</option>
                 </select>
-                <br>
             </div>
             <div class="mb-3 col-6 ">
             <label for="total_pembayaran" class="form-label"><b>Total Pembayaran</b></label>
             <input type="text" class="form-control" id="total_pembayaran" placeholder="Total Pembayaran" name="total_pembayaran">
-            <br>
         </div>
-<button type="submit" class="btn btn-sm btn-secondary">Tambah</button>             
+    <button type="submit" class="btn btn-sm btn-secondary">Tambah</button>
         </form>
     </div>
 </body>

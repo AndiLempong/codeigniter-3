@@ -37,7 +37,7 @@ class M_model extends CI_Model{
     public function get_by_nisn($nisn)
     {
         $this->db->select('id_siswa');
-        $this->db->select('siswa');
+        $this->db->from('siswa');
         $this->db->select('nisn', $nisn);
         $query = $this->db->get();
 

@@ -7,6 +7,8 @@
    <title>Document</title>
    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 </head>
 
 <body class="min-vh-100 d-flex align-items-center">
@@ -45,6 +47,40 @@
 </aside>
    <div class="card w-70 m-auto p-3">
       <table class="table table-striped">
+         <div class="d-flex p-3">
+            <a href="<?php echo base_url('admin/tambah_siswa') ?>" class="btn btn-info">
+            Tambah
+         </a>
+            <a href="<?php echo base_url('admin/export') ?>" class="btn btn-primary">
+            Export
+         </a>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+   Import
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Import</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <form class="mt-5" method="post" enctype="multipart/form-data" 
+        action="<?= base_url('admin/import') ?>">
+      <input type="file" name="file"/>
+      <button type="submit" class="btn btn-outline-success">Tambah</button>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
    <thead>
       <th scope="col">Siswa</th>
       <th scope="col">Nama Siswa</th>
@@ -73,13 +109,13 @@
                <?php echo tampil_full_kelas_byid($row->id_kelas) ?>
          </td>
                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                  <a href="<?php echo base_url('admin/ubah_siswa/').$row->id_siswa?>" class="btn btn-outline-success">Ubah</a>
-            <button onclick="hapus(<?php echo $row->id_siswa?>)" class="btn btn-outline-warning">Hapus</button>
+                  <a href="<?php echo base_url('admin/ubah_siswa/').$row->id_siswa?>" class="btn btn-success">Ubah</a>
+            <button onclick="hapus(<?php echo $row->id_siswa?>)" class="btn btn-warning">Hapus</button>
          
          </td>
       </tr><?php endforeach ?>
    </table>
-   <a href="<?php echo base_url('admin/tambah_siswa') ?>" class="btn btn-outline-danger">Tambah</a>
+
 </div>
    <script>
          function hapus(id) {

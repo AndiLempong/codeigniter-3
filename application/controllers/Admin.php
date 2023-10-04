@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class Admin extends CI_Controller {
 
 	function __construct(){
@@ -41,12 +44,6 @@ class Admin extends CI_Controller {
 		$data['siswa'] = $this->m_model->get_data('siswa')->result();
 		$this->load->view('admin/siswa', $data);
 	}
-
-	// public function hapus_siswa($id)
-	// {
-	// 	$this->m_model->delete('siswa', 'id_siswa', $id);
-	// 	redirect(base_url('admin/siswa'));
-	// }
 
 	public function hapus_siswa($id)
 	{
@@ -234,6 +231,135 @@ class Admin extends CI_Controller {
 			redirect(base_url('admin/keuangan/ubah_keuangan'.$this->input->post('id')));
 		}
 	}
+
+	// wekmrkrk
+	public function export () 
+	{ 
+	$spreadsheet = new Spreadsheet(); 
+	$sheet = $spreadsheet->getActiveSheet(); 
+
+	$style_col = [ 
+		'font' => ['bold' => true],
+		'alignment' => [ 
+		'horizontal' =>\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, 
+		'vertical' =>\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER, 
+		], 
+		'borders' => [ 
+		'top' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
+		'right' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
+		'bottom' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
+		'left' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN] 
+		] 
+		]; 
+
+		$style_row = [ 
+		'alignment' => [ 
+			'vertical' =>\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER, 
+		], 
+			'borders' => [ 
+			'top' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
+			'right' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
+			'bottom' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
+			'left' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN] 
+		] 
+		]; 
+
+		$sheet->setCellValue('A1', "DATA SISWA"); 
+		$sheet->mergeCells('A1:E1'); 
+		$sheet->getStyle('A1')->getFont()->setBold(true); 
+
+		// Head 
+		$sheet->setCellValue('A3', "ID SISWA"); 
+		$sheet->setCellValue('B3', "NAMA SISWA"); 
+		$sheet->setCellValue('C3', "NISN"); 
+		$sheet->setCellValue('D3', "GENDER"); 
+		$sheet->setCellValue('E3', "ID KELAS"); 
+
+		$sheet->getStyle('A3')->applyFromArray($style_col); 
+		$sheet->getStyle('B3')->applyFromArray($style_col); 
+		$sheet->getStyle('C3')->applyFromArray($style_col); 
+		$sheet->getStyle('D3')->applyFromArray($style_col); 
+		$sheet->getStyle('E3')->applyFromArray($style_col); 
+
+		// Get data from databse 
+		$data_siswa = $this->m_model->get_data('siswa')->result(); 
+
+		$no = 1; 
+		$numrow = 4; 
+		foreach ($data_siswa as $data) { 
+		$sheet->setCellValue('A'.$numrow, $data->id_siswa); 
+		$sheet->setCellValue('B'.$numrow, $data->nama_siswa); 
+		$sheet->setCellValue('C'.$numrow, $data->nisn);
+		$sheet->setCellValue('D'.$numrow, $data->gender);
+		$sheet->setCellValue('E'.$numrow, $data->id_kelas);
+		
+		$sheet->getStyle('A'.$numrow)->applyFromArray($style_row); 
+		$sheet->getStyle('B'.$numrow)->applyFromArray($style_row); 
+		$sheet->getStyle('C'.$numrow)->applyFromArray($style_row);
+		$sheet->getStyle('D'.$numrow)->applyFromArray($style_row);
+		$sheet->getStyle('E'.$numrow)->applyFromArray($style_row);
+
+		$no++; 
+		$numrow++; 
+		} 
+
+		$sheet->getColumnDimension('A')->setWidth(5); 
+		$sheet->getColumnDimension('B')->setWidth(25); 
+		$sheet->getColumnDimension('C')->setWidth(25); 
+		$sheet->getColumnDimension('D')->setWidth(20); 
+		$sheet->getColumnDimension('E')->setWidth(30); 
+
+		$sheet->getDefaultRowDimension()->setRowHeight(-1); 
+
+		$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE); 
+
+		$sheet->setTitle("LAPORAN DATA SISWA"); 
+
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); 
+		header('Content-Disposition: attachment; filename="SISWA.xlsx"'); 
+		header('Cache-Control: max-age='); 
+
+		$writer = new Xlsx($spreadsheet); 
+		$writer->save('php://output'); 
+	}
+
+	public function import()
+	{
+		if (isset($_FILES["file"]["name"])) {
+			$path = $_FILES["file"]["tmp_name"];
+			$object = PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+			foreach ($object->getWorksheetIterator() as $worksheet) 
+			{
+				$highestRow = $worksheet->getHighestRow();
+				$highestColumn = $worksheet->getHighestRow();
+				for ($row=2; $row <= $highestRow; $row++) 
+				{ 
+					$id_siswa = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
+					$nama_siswa = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
+					$nisn = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
+					$gender = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
+					$id_kelas = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
+
+					$get_id_by_nisn = $this->m_model->get_by_nisn($nisn);
+					$data = array(
+						'id_siswa' => $id_siswa,
+						'nama_siswa' => $nama_siswa,
+						'nisn' => $nisn,
+						'gender' => $gender,
+						'id_kelas' => $id_kelas,
+					);
+					$this->m_model->tambah_data('siswa', $data);
+				}
+			}
+			redirect(base_url('admin/siswa'));
+		} else {
+			echo 'Invalid File';
+		}
+	}
 }
 
-?>	
+?>
+
+
+
+

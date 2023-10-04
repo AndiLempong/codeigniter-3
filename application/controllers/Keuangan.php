@@ -180,7 +180,7 @@ class Keuangan extends CI_Controller {
 			{
 				$highestRow = $worksheet->getHighestRow();
 				$highestColumn = $worksheet->getHighestRow();
-				for ($row=2; $row <= $higHestRow; $row++) 
+				for ($row=2; $row <= $highestRow; $row++) 
 				{ 
 					$jenis_pembayaran = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
 					$total_pembayaran = $worksheet->getCellByColumnAndRow(3, $row)->getValue();

@@ -9,15 +9,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     </head>
 <body>
-<div class="card-group">
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Pembayaran</h5>
-        <p class="card-text"></p>
+  <div class="col-sm-2">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><b>Pembayaran</b></h5>
+        <hr>
+        <!-- <p class="card-text fs-2">Rp150.000</p><br> -->
+        <a href="<?php echo base_url('dashboard/pembayaran') ?>" class="btn btn-secondary">Data Lengkap</a>
+      </div>
     </div>
-    <div class="card-footer">
-        <small class="text-body-secondary">Last updated 3 mins ago</small>
-    </div>
-</div>
+  </div>
 </body>
 </html>
