@@ -51,7 +51,7 @@ class Admin extends CI_Controller {
 		$siswa = $this->m_model->get_by_id('siswa', 'id_siswa', $id)->row();
 		if ($siswa) {
 			if ($siswa->foto !== 'User.png') {
-				$file_path = './images/siswa/' . $siswa->foto;
+				$file_path = './Images/siswa/' . $siswa->foto;
 
 				if (file_exists($file_path)) {
 					if (unlink($file_path)) {
@@ -233,95 +233,96 @@ class Admin extends CI_Controller {
 	}
 
 	// wekmrkrk
-	public function export () 
-	{ 
-	$spreadsheet = new Spreadsheet(); 
-	$sheet = $spreadsheet->getActiveSheet(); 
+	public function  export(){
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
-	$style_col = [ 
-		'font' => ['bold' => true],
-		'alignment' => [ 
-		'horizontal' =>\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, 
-		'vertical' =>\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER, 
-		], 
-		'borders' => [ 
-		'top' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
-		'right' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
-		'bottom' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
-		'left' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN] 
-		] 
-		]; 
+        $style_col = [
+            'font'=> ['bold' => true],
+            'alignment'=> [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment ::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment ::VERTICAL_CENTER
+            ],
+            'borders'=> [
+                'top'=> ['borderstyle'=> \PhpOffice\PhpSpreadsheet\Style\Border ::BORDER_THIN],
+                'right'=> ['borderstyle'=> \PhpOffice\PhpSpreadsheet\Style\Border ::BORDER_THIN],
+                'bottom'=> ['borderstyle'=> \PhpOffice\PhpSpreadsheet\Style\Border ::BORDER_THIN],
+                'left'=> ['borderstyle'=> \PhpOffice\PhpSpreadsheet\Style\Border ::BORDER_THIN]
+            ],
+            ];
+        $style_row = [
+            
+            'alignment'=> [
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment ::VERTICAL_CENTER
+            ],
+            'borders'=> [
+                'top'=> ['borderstyle'=> \PhpOffice\PhpSpreadsheet\Style\Border ::BORDER_THIN],
+                'right'=> ['borderstyle'=> \PhpOffice\PhpSpreadsheet\Style\Border ::BORDER_THIN],
+                'bottom'=> ['borderstyle'=> \PhpOffice\PhpSpreadsheet\Style\Border ::BORDER_THIN],
+                'left'=> ['borderstyle'=> \PhpOffice\PhpSpreadsheet\Style\Border ::BORDER_THIN]
+            ],
+            ];
+    // Head
+            $sheet->setCellValue('A1','DATA SISWA');
+            $sheet->mergeCells('A1:E1');
+            $sheet->getStyle('A1')->getFont()->setBold(true);
+    
+            $sheet->setCellValue('A2','ID');
+            $sheet->setCellValue('B2','NAMA SISWA');
+            $sheet->setCellValue('C2','NISN');
+            $sheet->setCellValue('D2','GENDER');
+            $sheet->setCellValue('E2','KELAS');
+            $sheet->setCellValue('F2','FOTO');
+    
+            $sheet->getStyle('A2')->applyFromArray($style_col);
+            $sheet->getStyle('B2')->applyFromArray($style_col);
+            $sheet->getStyle('C2')->applyFromArray($style_col);
+            $sheet->getStyle('D2')->applyFromArray($style_col);
+            $sheet->getStyle('E2')->applyFromArray($style_col);
+            $sheet->getStyle('F2')->applyFromArray($style_col);
+    // get data dari database
+            $data_siswa = $this->m_model->get_data('siswa')->result();
+    // isi
+            $no=1;
+            $numrow=3;
+            foreach ($data_siswa as $data) {
+            $sheet->setCellValue('A'.$numrow,$data->id_siswa);
+            $sheet->setCellValue('B'.$numrow,$data->nama_siswa);
+            $sheet->setCellValue('C'.$numrow,$data->nisn);
+            $sheet->setCellValue('D'.$numrow,$data->gender);
+            $sheet->setCellValue('E'.$numrow,tampil_full_kelas_byid($data->id_kelas));
 
-		$style_row = [ 
-		'alignment' => [ 
-			'vertical' =>\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER, 
-		], 
-			'borders' => [ 
-			'top' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
-			'right' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
-			'bottom' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
-			'left' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN] 
-		] 
-		]; 
+    
+    $sheet->getStyle('A'.$numrow)->applyFromArray($style_row);
+    $sheet->getStyle('B'.$numrow)->applyFromArray($style_row);
+    $sheet->getStyle('C'.$numrow)->applyFromArray($style_row);
+    $sheet->getStyle('D'.$numrow)->applyFromArray($style_row);
+    $sheet->getStyle('E'.$numrow)->applyFromArray($style_row);
 
-		$sheet->setCellValue('A1', "DATA SISWA"); 
-		$sheet->mergeCells('A1:E1'); 
-		$sheet->getStyle('A1')->getFont()->setBold(true); 
+    $no++;
+    $numrow++;
+    }
+    
+            $sheet->getColumnDimension('A')->setWidth(5);
+            $sheet->getColumnDimension('B')->setWidth(25);
+            $sheet->getColumnDimension('C')->setWidth(25);
+            $sheet->getColumnDimension('D')->setWidth(20);
+            $sheet->getColumnDimension('E')->setWidth(30);
 
-		// Head 
-		$sheet->setCellValue('A3', "ID SISWA"); 
-		$sheet->setCellValue('B3', "NAMA SISWA"); 
-		$sheet->setCellValue('C3', "NISN"); 
-		$sheet->setCellValue('D3', "GENDER"); 
-		$sheet->setCellValue('E3', "ID KELAS"); 
-
-		$sheet->getStyle('A3')->applyFromArray($style_col); 
-		$sheet->getStyle('B3')->applyFromArray($style_col); 
-		$sheet->getStyle('C3')->applyFromArray($style_col); 
-		$sheet->getStyle('D3')->applyFromArray($style_col); 
-		$sheet->getStyle('E3')->applyFromArray($style_col); 
-
-		// Get data from databse 
-		$data_siswa = $this->m_model->get_data('siswa')->result(); 
-
-		$no = 1; 
-		$numrow = 4; 
-		foreach ($data_siswa as $data) { 
-		$sheet->setCellValue('A'.$numrow, $data->id_siswa); 
-		$sheet->setCellValue('B'.$numrow, $data->nama_siswa); 
-		$sheet->setCellValue('C'.$numrow, $data->nisn);
-		$sheet->setCellValue('D'.$numrow, $data->gender);
-		$sheet->setCellValue('E'.$numrow, $data->id_kelas);
-		
-		$sheet->getStyle('A'.$numrow)->applyFromArray($style_row); 
-		$sheet->getStyle('B'.$numrow)->applyFromArray($style_row); 
-		$sheet->getStyle('C'.$numrow)->applyFromArray($style_row);
-		$sheet->getStyle('D'.$numrow)->applyFromArray($style_row);
-		$sheet->getStyle('E'.$numrow)->applyFromArray($style_row);
-
-		$no++; 
-		$numrow++; 
-		} 
-
-		$sheet->getColumnDimension('A')->setWidth(5); 
-		$sheet->getColumnDimension('B')->setWidth(25); 
-		$sheet->getColumnDimension('C')->setWidth(25); 
-		$sheet->getColumnDimension('D')->setWidth(20); 
-		$sheet->getColumnDimension('E')->setWidth(30); 
-
-		$sheet->getDefaultRowDimension()->setRowHeight(-1); 
-
-		$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE); 
-
-		$sheet->setTitle("LAPORAN DATA SISWA"); 
-
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); 
-		header('Content-Disposition: attachment; filename="SISWA.xlsx"'); 
-		header('Cache-Control: max-age='); 
-
-		$writer = new Xlsx($spreadsheet); 
-		$writer->save('php://output'); 
-	}
+            $sheet->getDefaultRowDimension()->setRowHeight(-1);
+    
+            $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+    
+            $sheet->setTitle("LAPORAN DATA SISWA");
+    
+    
+            header('Content-Type: aplication/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="Siswa.xlsx"');
+            header('cache-Control: max-age=0');
+    
+            $writer =new Xlsx($spreadsheet);
+			$writer->save('php://output');
+    }
 
 	public function import()
 	{
@@ -336,9 +337,10 @@ class Admin extends CI_Controller {
 				{ 
 					$id_siswa = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
 					$nama_siswa = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
-					$nisn = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
-					$gender = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
-					$id_kelas = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
+					$nisn = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
+					$gender = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
+					$id_kelas = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
+					$foto = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
 
 					$get_id_by_nisn = $this->m_model->get_by_nisn($nisn);
 					$data = array(
@@ -347,6 +349,7 @@ class Admin extends CI_Controller {
 						'nisn' => $nisn,
 						'gender' => $gender,
 						'id_kelas' => $id_kelas,
+						'foto' => $foto,
 					);
 					$this->m_model->tambah_data('siswa', $data);
 				}
