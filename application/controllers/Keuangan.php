@@ -85,92 +85,36 @@ class Keuangan extends CI_Controller {
 		}
 	}
 
-	public function export () 
-	{ 
-	$spreadsheet = new Spreadsheet(); 
-	$sheet = $spreadsheet->getActiveSheet(); 
 
-	$style_col = [ 
-		'font' => ['bold' => true], 
-		'alignment' => [ 
-		'horizontal' =>\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, 
-		'vertical' =>\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER, 
-		], 
-		'borders' => [ 
-		'top' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
-		'right' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
-		'bottom' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
-		'left' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN] 
-		] 
-		]; 
+// export
+	public function exportToCSV()
+    {
+        // Ambil data yang akan diekspor (gantilah dengan data Anda)
+        $data = $this->m_model->get_data('pembayaran')->result();
+    
+        // Nama file CSV yang akan dihasilkan
+        $filename = 'export_data.csv';
+    
+        // Set header HTTP untuk membuat browser mengenali file sebagai CSV
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+    
+        // Buat file CSV
+        $output = fopen('php://output', 'w');
+    
+        // Tambahkan header
+        fputcsv($output, array('ID', 'JENIS PEMBAYARAN' , 'TOTAL PEMBAYARAN' ));
+    
+        // Isi data
+        foreach ($data as $item) {
+            fputcsv($output, array($item->id, $item->jenis_pembayaran , $item->total_pembayaran)); 
+        }
+    
+        fclose($output);
+    }
 
-		$style_row = [ 
-		'alignment' => [ 
-			'vertical' =>\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER, 
-		], 
-			'borders' => [ 
-			'top' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
-			'right' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
-			'bottom' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
-			'left' =>['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN] 
-		] 
-		]; 
 
-		$sheet->setCellValue('A1', "DATA PEMBAYARAN"); 
-		$sheet->mergeCells('A1:E1'); 
-		$sheet->getStyle('A1')->getFont()->setBold(true); 
-
-		// Head 
-		$sheet->setCellValue('A3', "ID"); 
-		$sheet->setCellValue('B3', "JENIS PEMBAYARAN"); 
-		$sheet->setCellValue('C3', "TOTAL PEMBAYARAN"); 
-		$sheet->setCellValue('D3', "SISWA"); 
-		$sheet->setCellValue('E3', "KELAS"); 
-
-		$sheet->getStyle('A3')->applyFromArray($style_col); 
-		$sheet->getStyle('B3')->applyFromArray($style_col); 
-		$sheet->getStyle('C3')->applyFromArray($style_col); 
-		$sheet->getStyle('D3')->applyFromArray($style_col); 
-		$sheet->getStyle('E3')->applyFromArray($style_col); 
-
-		// Get data from databse 
-		$data_pembayaran = $this->m_model->get_data('pembayaran')->result(); 
-
-		$no = 1; 
-		$numrow = 4; 
-		foreach ($data_pembayaran as $data) { 
-		$sheet->setCellValue('A'.$numrow, $data->id); 
-		$sheet->setCellValue('B'.$numrow, $data->jenis_pembayaran); 
-		$sheet->setCellValue('C'.$numrow, $data->total_pembayaran); 
-
-		$sheet->getStyle('A'.$numrow)->applyFromArray($style_row); 
-		$sheet->getStyle('B'.$numrow)->applyFromArray($style_row); 
-		$sheet->getStyle('C'.$numrow)->applyFromArray($style_row); 
-
-		$no++; 
-		$numrow++; 
-		} 
-
-		$sheet->getColumnDimension('A')->setWidth(5); 
-		$sheet->getColumnDimension('B')->setWidth(25); 
-		$sheet->getColumnDimension('C')->setWidth(25); 
-		$sheet->getColumnDimension('D')->setWidth(20); 
-		$sheet->getColumnDimension('E')->setWidth(30); 
-
-		$sheet->getDefaultRowDimension()->setRowHeight(-1); 
-
-		$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE); 
-
-		$sheet->setTitle("LAPORAN DATA PEMBAYARAN"); 
-
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); 
-		header('Content-Disposition: attachment; filename="PEMBAYARAN.xlsx"'); 
-		header('Cache-Control: max-age='); 
-
-		$writer = new Xlsx($spreadsheet); 
-		$writer->save('php://output'); 
-	}
-
+// import
 	public function import()
 	{
 		if (isset($_FILES["file"]["name"])) {
@@ -182,7 +126,7 @@ class Keuangan extends CI_Controller {
 				$highestColumn = $worksheet->getHighestRow();
 				for ($row=2; $row <= $highestRow; $row++) 
 				{ 
-					$jenis_pembayaran = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
+					$jenis_pembayaran = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
 					$total_pembayaran = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
 					$nisn = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
 
@@ -198,6 +142,34 @@ class Keuangan extends CI_Controller {
 			redirect(base_url('keuangan/pembayaran'));
 		} else {
 			echo 'Invalid File';
+		}
+	}
+
+	public function export_pembayaran()
+	{
+		$data['data_pembayaran'] = $this->m_model->get_data('pembayaran')->result();
+		$data['nama'] = 'pembayaran';
+		if ($this->uri->segment(3) == "pdf") {
+			$this->load->library('pdf');
+			$this->pdf->load_view('keuangan/export_data_pembayaran', $data);
+			$this->pdf->render();
+			$this->pdf->stream("data_pembayaran.pdf", array("Attachment" => false));
+		} else {
+			$this->load->view('keuangan/download_data_pembayaran', $data);
+		}
+	}
+
+	public function export_guru()
+	{
+		$data['data_guru'] = $this->m_model->get_data('guru')->result();
+		$data['nama'] = 'guru';
+		if ($this->uri->segment(3) == "pdf") {
+			$this->load->library('pdf');
+			$this->pdf->load_view('keuangan/export_data_guru', $data);
+			$this->pdf->render();
+			$this->pdf->stream("data_guru.pdf", array("Attachment" => false));
+		} else {
+			$this->load->view('keuangan/download_data_guru', $data);
 		}
 	}
 }

@@ -68,7 +68,7 @@
                         <thead>
                           <div class="d-flex p-3">
                             <a href="<?php echo base_url('admin/tambah_pembayaran') ?>" class="btn btn-info">Tambah</a>
-                            <a href="<?php echo base_url('keuangan/export') ?>" class="btn btn-primary">Export</a>
+                            <a href="<?php echo base_url('keuangan/exportToCSV') ?>" class="btn btn-primary">Export</a>
                             <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Import</button>
 
 <!-- Modal -->
